@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {nanoid} from "nanoid";
+
+import {generateList} from "../../mocks/tasks";
 
 import AppHeader from '../app-header/app-header';
 import SearchPanel from '../search-panel/search-panel';
@@ -7,17 +10,21 @@ import ItemStatusFilter from '../item-status-filter/item-status-filter';
 import ItemAddForm from '../item-add-form/item-add-form';
 
 import './app.css';
-
+const MAX = 4;
 export default class App extends Component {
 
-  maxId = 100;
+  // maxId = 100;
+
+  // state = {
+  //   todoData: [
+  //     { label: 'Drink Coffee', important: false, id: 1 },
+  //     { label: 'Make Awesome App', important: true, id: 2 },
+  //     { label: 'Have a lunch', important: false, id: 3 }
+  //   ]
+  // };
 
   state = {
-    todoData: [
-      { label: 'Drink Coffee', important: false, id: 1 },
-      { label: 'Make Awesome App', important: true, id: 2 },
-      { label: 'Have a lunch', important: false, id: 3 }
-    ]
+    todoData: new Array(MAX).fill().map(() => generateList()),
   };
 
   deleteItem = (id) => {
@@ -36,11 +43,10 @@ export default class App extends Component {
   };
 
   addItem = (text) => {
-    // generate id ?
     const newItem = {
       label: text,
       important: false,
-      id: this.maxId++
+      id: nanoid(3),
     };
 
     this.setState(({ todoData }) => {
