@@ -13,7 +13,8 @@ const Labels = [
 export const generateList = () => {
   return {
     label: getRandomElement(Labels),
-    important: getRandomInteger(),
+    important: Boolean(getRandomInteger(0, 1)),
+    done: Boolean(getRandomInteger(0, 1)),
     id: nanoid(3),
   }
 };
