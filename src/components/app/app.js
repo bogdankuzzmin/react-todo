@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {nanoid} from "nanoid";
 
 import {generateList} from "../../mocks/tasks";
+import {FilterType} from "../../const";
 
 import AppHeader from '../app-header/app-header';
 import SearchPanel from '../search-panel/search-panel';
@@ -10,12 +11,14 @@ import ItemStatusFilter from '../item-status-filter/item-status-filter';
 import ItemAddForm from '../item-add-form/item-add-form';
 
 import './app.css';
-const MAX = 4;
+
+const MAX_TASKS = 4;
+
 export default class App extends Component {
   state = {
-    todoData: new Array(MAX).fill().map(() => generateList()),
+    todoData: new Array(MAX_TASKS).fill().map(() => generateList()),
     term: '',
-    currentFilter: 'all',
+    currentFilter: FilterType.DEFAULT,
   };
 
   deleteItem = (id) => {
@@ -99,10 +102,28 @@ export default class App extends Component {
     this.setState({term});
   };
 
-  render() {
-    const {todoData, term} = this.state;
+  filterTasks = (tasks, currentFilter) => {
+    switch (currentFilter) {
+      case 'all':
+        return tasks;
+      case 'active':
+        return tasks.filter((it) => !it.done);
+      case 'done':
+        return tasks.filter((it) => it.done);
+      default:
+        return tasks;
+    }
 
-    const visibleItems = this.search(todoData, term);
+  };
+
+  filterChangeHandler = (currentFilter) => {
+    this.setState({currentFilter});
+  };
+
+  render() {
+    const {todoData, term, currentFilter} = this.state;
+
+    const visibleItems = this.filterTasks(this.search(todoData, term), currentFilter);
     const doneCount = todoData.filter((element) => element.done).length;
     const todoCount = todoData.filter((element) => !element.done).length;
 
@@ -111,7 +132,7 @@ export default class App extends Component {
         <AppHeader toDo={todoCount} done={doneCount} />
         <div className="top-panel d-flex">
           <SearchPanel searchChangeHandler={this.searchChangeHandler} />
-          <ItemStatusFilter />
+          <ItemStatusFilter filterChangeHandler={this.filterChangeHandler} currentFilter={currentFilter} />
         </div>
 
         <TodoList
