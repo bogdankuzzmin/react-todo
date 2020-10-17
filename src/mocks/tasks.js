@@ -7,7 +7,8 @@ const Labels = [
   `Write a new post`,
   `Go to the gym`,
   `Read on Harry Potter`,
-  `Clean emails`
+  `Clean emails`,
+  `Aloha, Stitch!`,
 ];
 
 export const generateList = () => {
